@@ -20,12 +20,16 @@
   <ItemGroup>
     <LibUsbNativeLibrary Include="$(LibUsbDirectory)\VS2022\MS32\dll\libusb-1.0.dll" RuntimeIdentifier="win-x86" />
     <LibUsbNativeLibrary Include="$(LibUsbDirectory)\VS2022\MS64\dll\libusb-1.0.dll" RuntimeIdentifier="win-x64" />
+    <LibUsbNativeLibrary Include="$(LibUsbMacOSDirectory)\libusb-osx-arm64\libusb-1.0.dylib" RuntimeIdentifier="osx-arm64" />
+    <LibUsbNativeLibrary Include="$(LibUsbMacOSDirectory)\libusb-osx-x64\libusb-1.0.dylib" RuntimeIdentifier="osx-x64" />
     <None Include="@(LibUsbNativeLibrary)" Pack="true" PackagePath="runtimes\%(RuntimeIdentifier)\native" Visible="false" />
   </ItemGroup>
 
   <Target Name="CheckLibUsbRelease" BeforeTargets="BeforeBuild">
     <Error Condition="'$(LibUsbDirectory)' == ''"
            Text="The LibUsbDirectory property must specify the folder of the extracted libusb release archive." />
+    <Error Condition="'$(LibUsbMacOSDirectory)' == ''"
+           Text="The LibUsbMacOSDirectory property must specify the folder of the libusb macOS build artifacts." />
     <Error Condition="!Exists('$(LibUsbDirectory)\libusb-$(VersionPrefix).7z')"
            Text="The libusb release archive in LibUsbDirectory must match the libusb version $(VersionPrefix)." />
     <Error Condition="!$([System.IO.File]::ReadAllText('$(NoticeFile)').Contains('/releases/tag/v$(VersionPrefix)'))"
