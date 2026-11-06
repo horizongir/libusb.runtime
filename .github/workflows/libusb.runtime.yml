@@ -11,9 +11,38 @@ env:
   DOTNET_GENERATE_ASPNET_CERTIFICATE: false
   ContinuousIntegrationBuild: true
   VersionSuffix: ${{github.event_name != 'release' && format('ci.{0}', github.run_number) || ''}}
-  LIBUSB_URL: https://github.com/libusb/libusb/releases/download/v1.0.27/libusb-1.0.27.7z
-  LIBUSB_SHA256: 19835e290f46fab6bd8ce4be6ab7dc5209f1c04bad177065df485e51dc4118c8
+  LIBUSB_BINARIES_URL: https://github.com/libusb/libusb/releases/download/v1.0.27/libusb-1.0.27.7z
+  LIBUSB_BINARIES_SHA256: 19835e290f46fab6bd8ce4be6ab7dc5209f1c04bad177065df485e51dc4118c8
+  LIBUSB_SOURCE_URL: https://github.com/libusb/libusb/releases/download/v1.0.27/libusb-1.0.27.tar.bz2
+  LIBUSB_SOURCE_SHA256: ffaa41d741a8a3bee244ac8e54a72ea05bf2879663c098c82fc5757853441575
 jobs:
+  build-macos:
+    name: Build ${{matrix.rid}}
+    runs-on: ${{matrix.os}}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-15
+            rid: osx-arm64
+            deployment-target: '11.0'
+          - os: macos-15-intel
+            rid: osx-x64
+            deployment-target: '10.15'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Build libusb
+        run: bash scripts/build-libusb-macos.sh ${{matrix.deployment-target}} artifacts/native/${{matrix.rid}}
+
+      - name: Collect native library
+        uses: actions/upload-artifact@v7
+        with:
+          name: libusb-${{matrix.rid}}
+          if-no-files-found: error
+          path: artifacts/native/${{matrix.rid}}/libusb-1.0.dylib
+
   build:
     name: Build and pack
     runs-on: ubuntu-latest
@@ -34,9 +63,9 @@ jobs:
         shell: bash
         run: |
           mkdir -p libusb
-          curl --fail --silent --show-error --location --output "libusb/$(basename "$LIBUSB_URL")" "$LIBUSB_URL"
-          echo "$LIBUSB_SHA256 libusb/$(basename "$LIBUSB_URL")" | sha256sum --check --strict
-          7z x -y -olibusb "libusb/$(basename "$LIBUSB_URL")" > /dev/null
+          curl --fail --silent --show-error --location --output "libusb/$(basename "$LIBUSB_BINARIES_URL")" "$LIBUSB_BINARIES_URL"
+          echo "$LIBUSB_BINARIES_SHA256 libusb/$(basename "$LIBUSB_BINARIES_URL")" | sha256sum --check --strict
+          7z x -y -olibusb "libusb/$(basename "$LIBUSB_BINARIES_URL")" > /dev/null
           echo "LibUsbDirectory=$GITHUB_WORKSPACE/libusb" >> "$GITHUB_ENV"
 
       - name: Restore
