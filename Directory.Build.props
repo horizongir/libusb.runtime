@@ -5,10 +5,11 @@
     <ReadmeFile>$(MSBuildThisFileDirectory)README.md</ReadmeFile>
     <LicenseFile>$(MSBuildThisFileDirectory)LICENSE</LicenseFile>
     <NoticeFile>$(MSBuildThisFileDirectory)NOTICE.txt</NoticeFile>
+    <IconFile>$(MSBuildThisFileDirectory)icon.png</IconFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="$(ReadmeFile);$(LicenseFile);$(NoticeFile)" Pack="true" PackagePath="" Visible="false" />
+    <None Include="$(ReadmeFile);$(LicenseFile);$(NoticeFile);$(IconFile)" Pack="true" PackagePath="" Visible="false" />
   </ItemGroup>
 
 </Project>
