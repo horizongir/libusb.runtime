@@ -1,0 +1,14 @@
+libusb.runtime is an unofficial redistribution of libusb, a C library for generic access to
+USB devices, and is not affiliated with the libusb project.
+
+Each library in this package is either a binary published with the libusb release listed
+below, or built from its unmodified source.
+
+Copyright the libusb authors, listed in the AUTHORS file of the source release.
+
+Project: https://libusb.info
+Release: https://github.com/libusb/libusb/releases/tag/v1.0.27
+Source: https://github.com/libusb/libusb/tree/d52e355daa09f17ce64819122cb067b8a2ee0d4b
+
+libusb is licensed under the GNU Lesser General Public License, version 2.1 or any later
+version, reproduced in the LICENSE file of this package.

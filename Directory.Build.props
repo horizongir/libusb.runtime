@@ -1,0 +1,14 @@
+<Project>
+
+  <PropertyGroup>
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+    <ReadmeFile>$(MSBuildThisFileDirectory)README.md</ReadmeFile>
+    <LicenseFile>$(MSBuildThisFileDirectory)LICENSE</LicenseFile>
+    <NoticeFile>$(MSBuildThisFileDirectory)NOTICE.txt</NoticeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(ReadmeFile);$(LicenseFile);$(NoticeFile)" Pack="true" PackagePath="" Visible="false" />
+  </ItemGroup>
+
+</Project>
